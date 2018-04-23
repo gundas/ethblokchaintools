@@ -40,24 +40,16 @@ function Analyze (blockNumber, blockEnd) {
 
 async function getBlockContracts (w3, blockNumber) {
    var contracts = [];
-   var block = await w3.eth.getBlock(blockNumber, false);
+   var block = await w3.eth.getBlock(blockNumber, true);
    if (block && block.transactions) {
       for (var tran of block.transactions) {
-         var contractAddr = await getContractFromTransaction(w3, tran);
-         if (contractAddr) {
-            var balance = await w3.eth.getBalance(""+ contractAddr);
-            contracts.push({'address':contractAddr, 'transaction': tran,  'balance':balance});
+         if (!tran.to) {
+            var tranReceipt = await w3.eth.getTransactionReceipt(tran.hash);
+            var balance = await w3.eth.getBalance(""+ tranReceipt.contractAddress);
+            contracts.push({'address':tranReceipt.contractAddress, 'transaction': tran.hash,  'balance':balance});
          }
       }
    }
    return contracts;
 }
 
-async function getContractFromTransaction(w3, transId) {
-   var tran = await w3.eth.getTransactionReceipt(transId);
-   if (!tran.to) {
-      return tran.contractAddress;
-   } else {
-      return null;
-   }
-}
