@@ -22,7 +22,7 @@ function Analyze (blockNumber, blockEnd) {
    getBlockContracts(w3, blockNumber).then( contracts => {
          if (contracts && contracts.length) {
              for (var contract of contracts) { 
-               console.log("%s %d %d %s %d", contract.address, w3.utils.fromWei(contract.balance), contract.createionBytecodeLength, contract.transaction, blockNumber);
+               console.log("%s %d %d %s %d", contract.address, w3.utils.fromWei(contract.balance), contract.creationBytecodeLength, contract.transaction, blockNumber);
              }
          }
         if (blockNumber < blockEnd) {
@@ -46,7 +46,7 @@ async function getBlockContracts (w3, blockNumber) {
          if (!tran.to) {
             var tranReceipt = await w3.eth.getTransactionReceipt(tran.hash);
             var balance = await w3.eth.getBalance(""+ tranReceipt.contractAddress);
-            contracts.push({'address':tranReceipt.contractAddress, 'transaction': tran.hash,  'balance':balance, 'createionBytecodeLength':tran.input.length});
+            contracts.push({'address':tranReceipt.contractAddress, 'transaction': tran.hash,  'balance':balance, 'creationBytecodeLength':tran.input.length});
          }
       }
    }
