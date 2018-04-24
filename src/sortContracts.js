@@ -3,7 +3,7 @@
 if (process.argv.length != 3 && process.argv.length !=4 ) {
    console.log("Usage: ");
    console.log("node sortContracts.js <input file> <minimum balance>");
-   console.log("<input file> format: account balanceEth blockNumber");
+   console.log("<input file> format: account balanceEth ...<does not matter> ...");
    console.log("<minimum balance> in ETH can be included in the results, will default to 0"); 
    process.exit(1);
 }
@@ -24,8 +24,8 @@ var contracts = [];
 rl.on('line', function (line) {
    // parse line
    var data = line.split(' ');
-   if (data.length != 3) { 
-      console.error('ERROR splitting data: %s Expected:3, received:%d', line, data.length);
+   if (data.length < 2) { 
+      console.error('ERROR splitting data: %s Expected at least 2 parts, received:%d', line, data.length);
       process.exit(1);
    }
    var balance = parseFloat(data[1]);
@@ -33,7 +33,7 @@ rl.on('line', function (line) {
       contracts.push({
         'account': data[0],
         'balance': balance,
-        'block' : data[2]
+        'remaining' : data.slice(2).join(' ')
         });
       //console.log(line);
    }
@@ -45,7 +45,7 @@ rl.on('close', function () {
    // sort and output
    contracts.sort(function (a,b) { return b.balance - a.balance});
    for (var i=0; i < contracts.length; i++) {
-      console.log("%s %d %d",  contracts[i].account, contracts[i].balance, contracts[i].block);
+      console.log("%s %d %s",  contracts[i].account, contracts[i].balance, contracts[i].remaining);
    }
 
 
