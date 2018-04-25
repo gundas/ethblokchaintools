@@ -28,11 +28,11 @@ var contracts = [];
 rl.on('line', function (line) {
    // parse line
    var data = line.split(' ');
-   if (data.length != 5) { 
-      console.log('ERROR splitting data, unexpected file format: '+ line);
+   if (data.length < 5) { 
+      console.log('ERROR splitting data, unexpected file format - cannot find transaction hash on 5th column: '+ line);
       process.exit(1);
    }
-   contracts.push({'address' : data[0], 'transaction' : data[3]});
+   contracts.push({'address' : data[0], 'transaction' : data[4]});
 });
 
 

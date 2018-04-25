@@ -7,7 +7,7 @@ var w3  = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 if (process.argv.length != 4) {
    console.log("Usage: ");
    console.log("node extractBytecode.js <input file> <output path>");
-   console.log("<input file> format - address balanceEth block");
+   console.log("<input file> format - each line must start with contract address, any subequent data should be separated by space");
    process.exit(1);
 }
 
@@ -28,10 +28,7 @@ var contracts = [];
 rl.on('line', function (line) {
    // parse line
    var data = line.split(' ');
-   if (data.length != 3) { 
-      console.log('ERROR splitting data: '+ line);
-      process.exit(1);
-   }
+   // first item is contract adddress
    contracts.push(data[0]);
 });
 
@@ -69,8 +66,8 @@ function writeBytecode (nextId) {
         }
       })
      .catch(e => {
-               console.log('Failed address: %s', address);
-               console.log(e);
+               console.error('Failed address: %s', address);
+               console.error(e);
                process.exit(1);
             });
 
