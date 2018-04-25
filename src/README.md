@@ -5,7 +5,19 @@ All of the tools assume that there is a local `Geth` instance running exposing R
 The tools are in alpha version.
 
 
-## List of tools
+## Extractig all contracts' metadata from Ethereum blockchain
+
+There is no way to enumerate accounts and contracts in the Ethereum blockchain. The only way to retrieve contracts is to check every transaction in every block of the blokchain and see if that transaction has created a new contract.
+
+### Identifying contract creation transactions
+Technically, every transaction which does not specify the destination address (leaves `transaction.to` empty) is considered to be a contract creation transaction in Ethereum. The new contract address is generated, the contract bytecode is created by excuting the bytecode provided in the `transaction.input` field and stored in the blockchain.
+The newly generated contract address can be seen in the `transactionReceipt`.
+
+However, a significant number of transactions (about one third on the main net) which do not specify destination address ( `transaction.to`) do not provide contract creation bytecode (`transaction.input`) as well. Such transactions succeed but create a contract with no bytecode. If Ether has been sent alog with a transacion it will be locked in the contract forewer, because the contract does not have any code to recover those funds.
+
+### Identifying failed contract creation transactions
+
+
 
 ### extractContracts.js
 
