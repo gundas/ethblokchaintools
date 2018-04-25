@@ -1,8 +1,6 @@
 ## Description
 The tools here are based on `nodejs` and us `web3` Ethereum Javascript API. 
-Most of the tools assume that there is a local `Geth` instance running exposing RPC endpoint at default `http://localhost:8545`.
-
-The tools are in alpha version.
+Most of the tools assume that there is a local `Geth` instance running exposing RPC endpoint at default `http://localhost:8545`. In order to retrieve data from blockchain `Geth` needs to be synchorized (blocks and the state database).
 
 
 ## Background information - extracting all contracts' metadata from Ethereum blockchain
@@ -37,7 +35,13 @@ The contract bytecode could be empty for the following reasons:
 # Usage
 
 ## Installation
-TBD
+
+```
+$ git clone https://github.com/gundas/ethblokchaintools.git
+$ cd src
+$ npm install
+
+```
 
 ## extractContracts.js
 
