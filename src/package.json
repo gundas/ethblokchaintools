@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "tools to extract contracts from Ethereum blockchain",
   "main": "extractContracts.js",
-  "dependencies": {},
+  "dependencies": {
+    "web3": "^1.0.0-beta.34"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
