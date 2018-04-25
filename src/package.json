@@ -1,0 +1,22 @@
+{
+  "name": "ethcontracts",
+  "version": "1.0.0",
+  "description": "tools to extract contracts from Ethereum blockchain",
+  "main": "extractContracts.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gundas/ethblokchaintools/tree/master/src"
+  },
+  "keywords": [
+    "Ethereum",
+    "blockchain",
+    "contracts"
+  ],
+  "author": "Gundas",
+  "license": "MIT"
+}
