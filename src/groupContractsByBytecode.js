@@ -3,7 +3,7 @@ readline = require("readline");
 fs = require("fs")
 
 
-readFile = function  (fileName, sep, props, keyIndex) {
+readFile = function  (fileName, sep, props) {
 
 	return new Promise (function (resolve, reject) {
     
@@ -11,7 +11,7 @@ readFile = function  (fileName, sep, props, keyIndex) {
 			input : fs.createReadStream(fileName)
 		});
 		
-		var results = {};
+		var results = [];
 		rl.on ('line', (line) => {
 			//console.log('Line: %s', line); 
 			// parse
@@ -22,9 +22,11 @@ readFile = function  (fileName, sep, props, keyIndex) {
 			} else {
 				result = {}
 				for (var i = 0; i < props.length; i++) {
-					result[props[i]] = data[i];
+					if ( props[i] ) {
+						result[props[i]] = data[i];
+					}
 				}
-				results[data[keyIndex]] = result;
+				results.push(result);
 			}
 		});
 		rl.on ('close', () => {
@@ -33,22 +35,19 @@ readFile = function  (fileName, sep, props, keyIndex) {
 	});
 }
 
-mergeFiles = async function (contractsFile, hashesFile)  {
- 	var contracts = await readFile(contractsFile, ' ', ["address", "balance", "block"], 0);
-	var hashes = await readFile(hashesFile, '  ', ["hash", "address"], 1);
+mergeFiles = async function (contractsFile)  {
+ 	var contracts = await readFile(contractsFile, ' ', ["address", "balance", "", "", "", "", "", "bytecodeHash"]);
 	
 	var merged = {};
 
-	for (var c in hashes) {
-		if (hashes.hasOwnProperty(c)) {
-			var h = hashes[c].hash;
-			if (!merged[h]) {
-				// create new summary object
-				merged[h] = { hash: h, totalBalance: 0, contracts : [] };
-			}
-			merged[h].contracts.push(c);
-			merged[h].totalBalance += parseFloat(contracts[c].balance);
-		}
+	for (var c of contracts) {
+		var entry = merged[c.bytecodeHash];
+		if (!entry) {
+			entry = {"hash" : c.bytecodeHash, "sumBalance" : 0, 'contracts':[]};
+		} 
+		entry.sumBalance += parseFloat(c.balance);
+		entry.contracts.push(c.address);
+		merged[c.bytecodeHash] = entry;
 	}
         // convert to array
         result = []
@@ -63,17 +62,16 @@ mergeFiles = async function (contractsFile, hashesFile)  {
 
 var args = process.argv;
 
-if (args.length != 4) {
+if (args.length != 3) {
 	console.error('usage:');
 	console.error('node mergeContratcs.js contractsFile hashesFile');
-	console.error('   contractsFile format: address balance block');
-	console.error('   hashesFile format: hash address');
+	console.error('   contractsFile format: address balance createBytecodeLength bytecodeLength transactionHash block blockTimestamp bytecodeMD5Hash');
 	process.exit(1);
 }
 
 mergeFiles(args[2], args[3]).then( (result) => {
-        result.sort(function (a,b) { return b.totalBalance - a.totalBalance});
+        result.sort(function (a,b) { return (b.sumBalance - a.sumBalance == 0) ? b.contracts.length - a.contracts.length : b.sumBalance - a.sumBalance  });
 	for (var h of result) {
-	   console.log ("%s %d %s", h.contracts, h.totalBalance, h.hash);
+	   console.log ("%d %d %s", h.sumBalance, h.contracts.length, h.hash);
 	}
 });
