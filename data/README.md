@@ -1,4 +1,4 @@
-See (https://github.com/gundas/ethblokchaintools/tree/master/src)[https://github.com/gundas/ethblokchaintools/tree/master/src] for detailed description how the data was obtained.
+See https://github.com/gundas/ethblokchaintools/tree/master/src for detailed description how the data was obtained.
 
 
 ## contracts5500000_nonempty.txt 
